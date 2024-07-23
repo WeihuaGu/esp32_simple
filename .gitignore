@@ -54,3 +54,5 @@ dkms.conf
 # build
 build/
 
+# self
+components/cwifi/include/cwifi.h
