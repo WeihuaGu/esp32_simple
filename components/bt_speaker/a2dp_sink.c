@@ -1,5 +1,6 @@
 #include "a2dp_sink.h"
 #include "common_event.h"
+#include "bluetick.h"
 a2dp_sink_state_t a2dp_sink_state;
 
 static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
@@ -32,8 +33,8 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
     /* when ACL connection completed, this event comes */
     case ESP_BT_GAP_ACL_CONN_CMPL_STAT_EVT:
         bda = (uint8_t *)param->acl_conn_cmpl_stat.bda;
-        ESP_LOGI(A2DPTAG, "ESP_BT_GAP_ACL_CONN_CMPL_STAT_EVT Connected to [%02x:%02x:%02x:%02x:%02x:%02x], status: 0x%x",
-                 bda[0], bda[1], bda[2], bda[3], bda[4], bda[5], param->acl_conn_cmpl_stat.stat);
+        ESP_LOGI(A2DPTAG, "ESP_BT_GAP_ACL_CONN_CMPL_STAT_EVT Connected to [%02x:%02x:%02x:%02x:%02x:%02x], status: 0x%x",bda[0], bda[1], bda[2], bda[3], bda[4], bda[5], param->acl_conn_cmpl_stat.stat);
+	//blue_hold_on();
         break;
     /* when ACL disconnection completed, this event comes */
     case ESP_BT_GAP_ACL_DISCONN_CMPL_STAT_EVT:
@@ -41,6 +42,7 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
         ESP_LOGI(A2DPTAG, "ESP_BT_GAP_ACL_DISC_CMPL_STAT_EVT Disconnected from [%02x:%02x:%02x:%02x:%02x:%02x], reason: 0x%x",
                  bda[0], bda[1], bda[2], bda[3], bda[4], bda[5], param->acl_disconn_cmpl_stat.reason);
 	esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
+	//blue_hold_off();
 
         break;
     case ESP_BT_GAP_GET_DEV_NAME_CMPL_EVT:

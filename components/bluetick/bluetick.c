@@ -1,7 +1,6 @@
 #include <driver/gpio.h>
 #include "bluetick.h"
 
-#define GPIO_LED_OUT 21
 void bluetick_set_gpio(){
     gpio_config_t my_io_config = {
         .pin_bit_mask = 1 << GPIO_LED_OUT,

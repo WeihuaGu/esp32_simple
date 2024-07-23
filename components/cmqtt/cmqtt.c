@@ -143,7 +143,7 @@ void task_common(void *arg){
 void mqtt_app_start(void){
 	common_queue = xQueueCreate(MQTT_QUEUE_LENGTH,sizeof(char *));
 	xTaskCreate(mqtt_init, "mqtt_start", configMINIMAL_STACK_SIZE*1.5, NULL, 1, &mqtt_task_handle);
-	xTaskCreate(task_common, "mqtt_common_queue", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate(task_common, "mqtt_common_queue", configMINIMAL_STACK_SIZE*1.5, NULL, 1, NULL);
 
 }
 

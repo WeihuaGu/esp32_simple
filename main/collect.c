@@ -36,18 +36,19 @@ void init_communication(void)
     display_init();
     init_wifi();
     mqtt_app_start();
-    //lora_start();
 }
 void init_components(void)
 {
     bluetick_set_gpio();
     text_demo();
     bt_init();
+    //lora_start();
 }
 void app_main(void)
 {
      init_communication();
      init_components();
+     blue_hold_on();
      bloodoxygensensor_data_reader_run();
      temsensor_data_reader_run();
 
