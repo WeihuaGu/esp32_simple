@@ -41,7 +41,7 @@ static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *pa
         bda = (uint8_t *)param->acl_disconn_cmpl_stat.bda;
         ESP_LOGI(A2DPTAG, "ESP_BT_GAP_ACL_DISC_CMPL_STAT_EVT Disconnected from [%02x:%02x:%02x:%02x:%02x:%02x], reason: 0x%x",
                  bda[0], bda[1], bda[2], bda[3], bda[4], bda[5], param->acl_disconn_cmpl_stat.reason);
-	esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
+	//esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
 	//blue_hold_off();
 
         break;
@@ -163,6 +163,11 @@ void bt_init_task(void *arg){
     if (ret != ESP_OK) {
         xEventGroupSetBits(get_main_event_group(), BT_INIT_ERR);
         ESP_LOGE(A2DPTAG, "esp_bluedroid_enable failed: %s", esp_err_to_name(ret));
+    }
+
+    ret = esp_bredr_tx_power_set(ESP_PWR_LVL_P6,ESP_PWR_LVL_P9);
+    if (ret != ESP_OK) {
+        ESP_LOGE(A2DPTAG, "Set BR/EDR TX power failed: %s", esp_err_to_name(ret));
     }
 
     //pin

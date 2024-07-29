@@ -14,8 +14,8 @@
 #define I2S_BCLK_NUM GPIO_NUM_23
 #define I2S_DOUT_NUM GPIO_NUM_26
 #define I2S_LRCK_NUM GPIO_NUM_18
-#define RINGBUF_HIGHEST_WATER_LEVEL    (19 * 1024)
-#define RINGBUF_PREFETCH_WATER_LEVEL (6 * 1024)  /*waiting to be retrieved limited*/
+#define RINGBUF_HIGHEST_WATER_LEVEL    (25 * 1024)
+#define RINGBUF_PREFETCH_WATER_LEVEL (3 * 1024)  /*waiting to be retrieved limited*/
 
 enum {
     RINGBUFFER_MODE_PROCESSING,    /* ringbuffer is buffering incoming audio data, I2S is working */
