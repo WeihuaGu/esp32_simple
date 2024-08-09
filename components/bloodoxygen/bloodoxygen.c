@@ -87,7 +87,7 @@ void bloodoxygensensor_data_reader()
 	}
 }
 void bloodoxygensensor_data_reader_run(){
-	 xTaskCreate(bloodoxygensensor_data_reader, "spo2_task", configMINIMAL_STACK_SIZE*2, NULL, 1, &spo2_task_handle);
+	 xTaskCreate(bloodoxygensensor_data_reader, "spo2_task", configMINIMAL_STACK_SIZE*2, NULL, 2, &spo2_task_handle);
 }
 
 void fill_buffers_data()

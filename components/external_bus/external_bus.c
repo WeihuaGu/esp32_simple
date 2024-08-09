@@ -1,4 +1,5 @@
 #include "external_bus.h"
+
 const uart_port_t uart_num = UART_NUM_2;
 QueueHandle_t uart_queue;
 
@@ -48,4 +49,8 @@ esp_err_t uart_flush_data(){
 void i2s_init(void){
 	do_i2s_driver_install();
 	i2s_task_start_up();
+}
+void dac_one_shot_init(){
+	dac_oneshot_install();
+	set_sd_mode(1);
 }

@@ -6,6 +6,7 @@
 #include "i2c_config_base.h"
 #include "uart_config_base.h"
 #include "bus_i2s.h"
+#include "max98357.h"
 
 
 esp_err_t i2c_init(void);
@@ -14,5 +15,6 @@ int uart_send(const char *text);
 int uart_read(char* data);
 esp_err_t uart_flush_data();
 void i2s_init();
+void dac_one_shot_init();
 
 #endif

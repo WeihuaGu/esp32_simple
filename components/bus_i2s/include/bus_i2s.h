@@ -12,19 +12,21 @@
 
 #define I2S_CORE_TAG "i2s core tag"
 #define I2S_BCLK_NUM GPIO_NUM_23
-#define I2S_DOUT_NUM GPIO_NUM_26
+#define I2S_DOUT_NUM GPIO_NUM_19
 #define I2S_LRCK_NUM GPIO_NUM_18
 #define RINGBUF_HIGHEST_WATER_LEVEL    (25 * 1024)
-#define RINGBUF_PREFETCH_WATER_LEVEL (3 * 1024)  /*waiting to be retrieved limited*/
+#define RINGBUF_PREFETCH_WATER_LEVEL (1 * 1024)  /*waiting to be retrieved limited*/
 
 enum {
     RINGBUFFER_MODE_PROCESSING,    /* ringbuffer is buffering incoming audio data, I2S is working */
     RINGBUFFER_MODE_PREFETCHING,   /* ringbuffer is buffering incoming audio data, I2S is waiting */
     RINGBUFFER_MODE_DROPPING       /* ringbuffer is not buffering (dropping) incoming audio data, I2S is working */
 };
+extern int bus_isdown;
 extern uint16_t ringbuffer_mode;
 extern SemaphoreHandle_t s_i2s_write_semaphore;
 void do_i2s_driver_install(void);
+void re_enable_i2s_channel();
 RingbufHandle_t get_i2s_ringbuf();
 void i2s_task_start_up();
 void i2s_task_shut_down();

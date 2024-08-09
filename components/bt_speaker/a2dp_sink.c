@@ -1,6 +1,7 @@
 #include "a2dp_sink.h"
 #include "common_event.h"
 #include "bluetick.h"
+#include "max98357.h"
 a2dp_sink_state_t a2dp_sink_state;
 
 static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
@@ -69,8 +70,12 @@ void a2dp_sink_event_callback(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *para
             esp_a2d_connection_state_t state = param->conn_stat.state;  
             if (state == ESP_A2D_CONNECTION_STATE_CONNECTED) {  
                 ESP_LOGI("A2DP_SINK", "A2DP audio stream connected");  
+		set_sd_mode(1);
             } else if (state == ESP_A2D_CONNECTION_STATE_DISCONNECTED) {  
                 ESP_LOGI("A2DP_SINK", "A2DP audio stream disconnected");  
+		set_sd_mode(0);
+		//re_on_max98357();
+
             }  
             break;  
         }  
@@ -106,7 +111,8 @@ void a2dp_sink_event_callback(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *para
 
 void a2dp_sink_data_event_callback(const uint8_t *data, uint32_t len)
 {
-    write_ringbuf(data, len);
+    if(bus_isdown==0)
+        write_ringbuf(data, len);
 }
 
 // 初始化A2DP Sink
@@ -165,7 +171,7 @@ void bt_init_task(void *arg){
         ESP_LOGE(A2DPTAG, "esp_bluedroid_enable failed: %s", esp_err_to_name(ret));
     }
 
-    ret = esp_bredr_tx_power_set(ESP_PWR_LVL_P6,ESP_PWR_LVL_P9);
+    ret = esp_bredr_tx_power_set(ESP_PWR_LVL_P3,ESP_PWR_LVL_P9);
     if (ret != ESP_OK) {
         ESP_LOGE(A2DPTAG, "Set BR/EDR TX power failed: %s", esp_err_to_name(ret));
     }

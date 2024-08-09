@@ -18,6 +18,8 @@ void external_bus_init(void)
      vTaskDelay(pdMS_TO_TICKS(100));
      i2s_init();
      vTaskDelay(pdMS_TO_TICKS(100));
+     dac_one_shot_init();
+     vTaskDelay(pdMS_TO_TICKS(100));
 
 }
 void init_communication(void)

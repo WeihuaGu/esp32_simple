@@ -4,8 +4,10 @@ static i2s_chan_handle_t tx_handle;
 
 static RingbufHandle_t s_ringbuf_i2s = NULL;
 uint16_t ringbuffer_mode = RINGBUFFER_MODE_PROCESSING;
+int bus_isdown = 1;
 static TaskHandle_t s_i2s_task_handle = NULL;
 SemaphoreHandle_t s_i2s_write_semaphore = NULL;
+
 
 RingbufHandle_t get_i2s_ringbuf(){
     return s_ringbuf_i2s;
@@ -37,6 +39,10 @@ void do_i2s_driver_install(void)
     i2s_channel_enable(tx_handle);
 
 
+}
+void re_enable_i2s_channel(){
+    i2s_channel_disable(tx_handle);
+    i2s_channel_enable(tx_handle);
 }
 
 static void i2s_task(void *arg)
@@ -73,12 +79,15 @@ void i2s_task_start_up(void)
     if(s_ringbuf_i2s!=NULL){
         ESP_LOGI(I2S_CORE_TAG, "ringbuffer list create ok");
         xEventGroupSetBits(get_main_event_group(), I2S_RINGBUF_OK);
-        xTaskCreate(i2s_task, "I2STask",configMINIMAL_STACK_SIZE*2, NULL, 2, &s_i2s_task_handle );
+        xTaskCreate(i2s_task, "I2STask",configMINIMAL_STACK_SIZE*2, NULL, 4, &s_i2s_task_handle );
     }
+
+    bus_isdown = 0;
 }
 
 void i2s_task_shut_down(void)
 {
+    bus_isdown = 1;
     if (s_i2s_task_handle) {
         vTaskDelete(s_i2s_task_handle);
         s_i2s_task_handle = NULL;
