@@ -3,7 +3,6 @@
 #include "bluetick.h"
 #include "max98357.h"
 #include "push_speaker.h"
-a2dp_sink_state_t a2dp_sink_state;
 
 static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 {

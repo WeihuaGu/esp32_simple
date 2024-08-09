@@ -45,7 +45,7 @@ size_t write_speaker_ringbuf(const uint8_t *data, size_t size){
 void play_silence(size_t seconds){
     size_t frames_to_write = seconds * SAMPLE_RATE;
     for (size_t i = 0; i < frames_to_write; i++) {
-        write_speaker_ringbuf(&silence_frame, SAMPLE_BYTES);
+        write_speaker_ringbuf(&silence_frame[0], SAMPLE_BYTES);
 
     }
 
