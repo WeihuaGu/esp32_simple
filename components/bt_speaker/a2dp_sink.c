@@ -2,6 +2,7 @@
 #include "common_event.h"
 #include "bluetick.h"
 #include "max98357.h"
+#include "push_speaker.h"
 a2dp_sink_state_t a2dp_sink_state;
 
 static void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
@@ -70,10 +71,11 @@ void a2dp_sink_event_callback(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *para
             esp_a2d_connection_state_t state = param->conn_stat.state;  
             if (state == ESP_A2D_CONNECTION_STATE_CONNECTED) {  
                 ESP_LOGI("A2DP_SINK", "A2DP audio stream connected");  
-		set_sd_mode(1);
+		//set_sd_mode(1);
             } else if (state == ESP_A2D_CONNECTION_STATE_DISCONNECTED) {  
                 ESP_LOGI("A2DP_SINK", "A2DP audio stream disconnected");  
-		set_sd_mode(0);
+		play_silence(2);
+		//set_sd_mode(0);
 		//re_on_max98357();
 
             }  
