@@ -44,7 +44,7 @@ void init_components(void)
     bluetick_set_gpio();
     text_demo();
     bt_init();
-    //lora_start();
+    lora_start();
 }
 void app_main(void)
 {
