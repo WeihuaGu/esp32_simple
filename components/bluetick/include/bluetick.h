@@ -1,6 +1,6 @@
 #ifndef BLUETICK_H
 #define BLUETICK_H
-#define GPIO_LED_OUT 17
+#define GPIO_LED_OUT 15
 
 
 void bluetick_set_gpio();

@@ -11,9 +11,9 @@
 
 
 #define I2S_CORE_TAG "i2s core tag"
-#define I2S_BCLK_NUM GPIO_NUM_23
-#define I2S_DOUT_NUM GPIO_NUM_19
-#define I2S_LRCK_NUM GPIO_NUM_18
+#define I2S_BCLK_NUM GPIO_NUM_22
+#define I2S_DOUT_NUM GPIO_NUM_21
+#define I2S_LRCK_NUM GPIO_NUM_17
 #define RINGBUF_HIGHEST_WATER_LEVEL    (25 * 1024)
 #define RINGBUF_PREFETCH_WATER_LEVEL (1 * 1024)  /*waiting to be retrieved limited*/
 

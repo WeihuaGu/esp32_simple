@@ -7,14 +7,11 @@
 #include "cwifi.h"
 #include "cmqtt.h"
 #include "dht11.h"
-#include "lora.h"
 #include "a2dp_sink.h"
 
 void external_bus_init(void)
 {
      i2c_init();
-     vTaskDelay(pdMS_TO_TICKS(100));
-     uart_init();
      vTaskDelay(pdMS_TO_TICKS(100));
      i2s_init();
      vTaskDelay(pdMS_TO_TICKS(100));
@@ -44,7 +41,6 @@ void init_components(void)
     bluetick_set_gpio();
     text_demo();
     bt_init();
-    lora_start();
 }
 void app_main(void)
 {
