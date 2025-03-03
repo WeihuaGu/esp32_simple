@@ -18,6 +18,11 @@ void i2s_init(void){
 	do_i2s_driver_install();
 	i2s_task_start_up();
 }
+void spi_init(void){
+	bus_spi_init();
+	psram_test_read();
+
+}
 void dac_one_shot_init(){
 	dac_oneshot_install();
 	set_sd_mode(1);

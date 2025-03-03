@@ -13,6 +13,8 @@ void external_bus_init(void)
 {
      i2c_init();
      vTaskDelay(pdMS_TO_TICKS(100));
+     spi_init();
+     vTaskDelay(pdMS_TO_TICKS(100));
      i2s_init();
      vTaskDelay(pdMS_TO_TICKS(100));
      dac_one_shot_init();

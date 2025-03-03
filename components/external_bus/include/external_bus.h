@@ -6,10 +6,12 @@
 #include "i2c_config_base.h"
 #include "bus_i2s.h"
 #include "max98357.h"
+#include "bus_spi.h"
 
 
 esp_err_t i2c_init(void);
 void i2s_init();
 void dac_one_shot_init();
+void spi_init();
 
 #endif
