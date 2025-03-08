@@ -20,7 +20,7 @@ void i2s_init(void){
 }
 void spi_init(void){
 	bus_spi_init();
-	psram_test_read();
+	fram_test();
 
 }
 void dac_one_shot_init(){

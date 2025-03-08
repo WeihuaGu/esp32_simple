@@ -32,7 +32,9 @@
 enum dht11_status {
     DHT11_CRC_ERROR = -2,
     DHT11_TIMEOUT_ERROR,
-    DHT11_OK
+    DHT11_OK,
+    DHT11_TIMEOUT_ERROR_not0,
+    DHT11_TIMEOUT_ERROR_not1,
 };
 
 struct dht11_reading {

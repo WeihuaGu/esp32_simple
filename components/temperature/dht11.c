@@ -64,12 +64,16 @@ static void _sendStartSignal() {
 
 static int _checkResponse() {
     /* Wait for next step ~80us*/
-    if(_waitOrTimeout(80, 0) == DHT11_TIMEOUT_ERROR)
+    if(_waitOrTimeout(80, 0) == DHT11_TIMEOUT_ERROR){
+	printf("tem checkRes err: %d;",DHT11_TIMEOUT_ERROR_not0);
         return DHT11_TIMEOUT_ERROR;
+    }
 
     /* Wait for next step ~80us*/
-    if(_waitOrTimeout(80, 1) == DHT11_TIMEOUT_ERROR) 
+    if(_waitOrTimeout(80, 1) == DHT11_TIMEOUT_ERROR){
+	printf("tem checkRes err: %d;",DHT11_TIMEOUT_ERROR_not1);
         return DHT11_TIMEOUT_ERROR;
+    }
 
     return DHT11_OK;
 }
@@ -133,6 +137,8 @@ void temsensor_data_reader(void *arg)
         char *dhtdata;
         for(;;){
 		dhtdata_info = DHT11_read();
+		if(dhtdata_info.status != DHT11_OK)
+		        printf("tem test status: %d\n",dhtdata_info.status);
 		if(dhtdata_info.status == DHT11_OK){
 			dis_temperature(dhtdata_info.temperature,dhtdata_info.humidity);
                         asprintf(&dhtdata, "{\"intent\":\"temperature\",\"temperature\":%u, \"humidity\":%u}", dhtdata_info.temperature, dhtdata_info.humidity);
