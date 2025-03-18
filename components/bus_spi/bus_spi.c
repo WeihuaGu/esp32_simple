@@ -15,10 +15,10 @@ esp_err_t bus_spi_init(void) {
         .max_transfer_sz = 4096
     };
     spi_device_interface_config_t devcfg = {
-        .clock_speed_hz = 20 * 1000 * 1000, // 20 MHz
+        .clock_speed_hz = 10 * 1000 * 1000, // 20 MHz
         .mode = 0,                          // SPI mode 0
         .spics_io_num = FRAM_PIN_NUM_CS,         // CS pin
-        .queue_size = 3                      // Transaction queue size
+        .queue_size = 1                      // Transaction queue size
     };
     // 初始化 SPI 总线
     esp_err_t ret = spi_bus_initialize(USE_SPI_HOST, &buscfg, SPI_DMA_CH_AUTO);
@@ -53,18 +53,48 @@ esp_err_t send_command_array(const uint8_t *commands, size_t command_len) {
 esp_err_t send_command_array_withreturn(const uint8_t *commands, size_t command_len, uint8_t *rx_data, size_t rx_len) {
     esp_err_t ret;
     spi_transaction_t t;
+    uint8_t *tx_buffer_padded = NULL;
+    uint8_t *rx_buffer_padded = NULL;
     memset(&t, 0, sizeof(t));
-    t.length = command_len * 8;  // 发送数据长度（位）
-    t.tx_buffer = commands;
-    if (rx_len > 0) {
-        t.rxlength = rx_len * 8;  // 接收数据长度（位）
+    int dummy_size = rx_len - command_len;
+    if(dummy_size == 0){
+        t.tx_buffer = commands;
+        t.length = command_len * 8;
+        t.rxlength = rx_len * 8;
         t.rx_buffer = rx_data;
     }
-
+    if(dummy_size > 0){
+        t.length = rx_len * 8;
+        tx_buffer_padded = (uint8_t*)malloc(rx_len);
+	memcpy(tx_buffer_padded, commands, command_len);
+	memset(tx_buffer_padded + command_len,0xFF, dummy_size);
+	t.tx_buffer = tx_buffer_padded;
+        t.rxlength = rx_len * 8;
+        t.rx_buffer = rx_data;
+    }
+    if(dummy_size < 0){
+        t.length = command_len * 8;
+        t.tx_buffer = commands;
+        t.rxlength = command_len * 8;
+        rx_buffer_padded = (uint8_t*)malloc(command_len);
+	t.rx_buffer = rx_buffer_padded;
+    }
     ret = spi_device_transmit(spi, &t);
     if (ret != ESP_OK) {
         ESP_LOGE("SPI", "Failed to send command array: %s", esp_err_to_name(ret));
     }
+    if(dummy_size > 0){
+	free(tx_buffer_padded);
+    }
+    if(dummy_size < 0){
+        memcpy(rx_data,rx_buffer_padded,rx_len);
+	free(rx_buffer_padded);
+    }
+    for(int i=0;i<(t.length)/8;i++){
+	     printf("0x%02X ", ((uint8_t*)t.rx_buffer)[i]);
+    }
+
+
     return ret;
 }
 
