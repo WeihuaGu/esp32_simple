@@ -7,7 +7,7 @@
 #include "bus_i2s.h"
 #include "max98357.h"
 #include "bus_spi.h"
-#include "fram_base.h"
+#include "psram_base.h"
 
 
 esp_err_t i2c_init(void);

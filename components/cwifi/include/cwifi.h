@@ -13,7 +13,7 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-#define MAXIMUM_RETRY  10
+#define MAXIMUM_RETRY  3
 #define SSID "you wifi ssid"
 #define PASSWD "you wifi passpd"
 

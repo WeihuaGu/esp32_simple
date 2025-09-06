@@ -1,3 +1,4 @@
-idf_component_register(SRCS "bus_spi.c" "fram_base.c"
+idf_component_register(SRCS "bus_spi.c" "flash_base.c" "psram_base.c"
                        INCLUDE_DIRS "include"
-                       REQUIRES driver freertos common_event)
+                       REQUIRES driver freertos)
+
