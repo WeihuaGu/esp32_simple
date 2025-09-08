@@ -4,8 +4,9 @@
 #include "psram_base.h"
 
 uint8_t device_id[8] = {0};
+uint8_t capacity_id = 0x17;
 // 读取设备 ID
-void read_device_id() {
+esp_err_t read_device_id() {
     esp_err_t ret;
     uint8_t tx_buffer[4];
     tx_buffer[0] = PSRAM_READ_ID_CMD;
@@ -15,6 +16,7 @@ void read_device_id() {
     ret = send_command_array_withreturn(SPI_DEVICE_PSRAM, tx_buffer, sizeof(tx_buffer), device_id, sizeof(device_id));
     if (ret != ESP_OK) {
         ESP_LOGE("SPI", "Failed to read data: %s", esp_err_to_name(ret));
+	return ret;
     }
     // 制造商ID
     ESP_LOGI("PSRAM", "Manufacturer ID: 0x%02X", device_id[0]);
@@ -26,9 +28,37 @@ void read_device_id() {
     ESP_LOGI("PSRAM", "  EID[23:16]: 0x%02X (Byte 5)", device_id[5]);
     ESP_LOGI("PSRAM", "  EID[15:8]:  0x%02X (Byte 6)", device_id[6]);
     ESP_LOGI("PSRAM", "  EID[7:0]:   0x%02X (Byte 7)", device_id[7]);
+    return ESP_OK;
+}
+esp_err_t psram_read(uint32_t addr,uint8_t *data){
+    esp_err_t ret;
+    uint8_t tx_buffer[4];
+    tx_buffer[0] = PSRAM_READ_CMD;
+    tx_buffer[1] = (addr >> 16) & 0xFF;
+    tx_buffer[2] = (addr >> 8) & 0xFF;
+    tx_buffer[3] = addr & 0xFF;
+    ret = send_command_array_withreturn(SPI_DEVICE_PSRAM, tx_buffer, sizeof(tx_buffer), data, 1);
+    return ret;
+}
+esp_err_t psram_write(uint32_t addr,uint8_t *data){
+    esp_err_t ret;
+    uint8_t tx_buffer[5];
+    tx_buffer[0] = PSRAM_WRITE_CMD;
+    tx_buffer[1] = (addr >> 16) & 0xFF;
+    tx_buffer[2] = (addr >> 8) & 0xFF;
+    tx_buffer[3] = addr & 0xFF;
+    tx_buffer[4] = *data;
+    ret = send_command_array_noreturn(SPI_DEVICE_PSRAM, tx_buffer, sizeof(tx_buffer));
+    return ret;
 }
 
 void psram_test() {
     read_device_id();
+    uint8_t a = (uint8_t)'x';
+    uint8_t x;
+    uint32_t addr = 0x23;
+    psram_write(addr,&a);
+    psram_read(addr,&x);
+    printf("%c",x);
 }
 

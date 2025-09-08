@@ -131,8 +131,8 @@ esp_err_t send_command_array_withreturn(int spidevice, const uint8_t *commands, 
     }
     printf("\n");
 
-    ret = spi_device_polling_transmit(spi_handles[spidevice], &t);
-    //ret = spi_device_transmit(spi_handles[spidevice], &t);
+    //ret = spi_device_polling_transmit(spi_handles[spidevice], &t);
+    ret = spi_device_transmit(spi_handles[spidevice], &t);
     if (ret != ESP_OK) {
         ESP_LOGE("SPI", "Failed to send command array: %s", esp_err_to_name(ret));
     }
