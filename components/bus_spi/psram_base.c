@@ -21,6 +21,7 @@ esp_err_t read_device_id() {
     // 制造商ID
     ESP_LOGI("PSRAM", "Manufacturer ID: 0x%02X", device_id[0]);
     ESP_LOGI("PSRAM", "KGD: 0x%02X", device_id[1]);
+    /*
     ESP_LOGI("PSRAM", "EID[47:0]:");
     ESP_LOGI("PSRAM", "  EID[47:40]: 0x%02X (Byte 2)", device_id[2]);
     ESP_LOGI("PSRAM", "  EID[39:32]: 0x%02X (Byte 3)", device_id[3]);
@@ -28,9 +29,12 @@ esp_err_t read_device_id() {
     ESP_LOGI("PSRAM", "  EID[23:16]: 0x%02X (Byte 5)", device_id[5]);
     ESP_LOGI("PSRAM", "  EID[15:8]:  0x%02X (Byte 6)", device_id[6]);
     ESP_LOGI("PSRAM", "  EID[7:0]:   0x%02X (Byte 7)", device_id[7]);
+    */
     return ESP_OK;
 }
 esp_err_t psram_read(uint32_t addr,uint8_t *data){
+    if(!is_address_valid(addr,capacity_id))
+	    return ESP_FAIL;
     esp_err_t ret;
     uint8_t tx_buffer[4];
     tx_buffer[0] = PSRAM_READ_CMD;
@@ -41,6 +45,8 @@ esp_err_t psram_read(uint32_t addr,uint8_t *data){
     return ret;
 }
 esp_err_t psram_write(uint32_t addr,uint8_t *data){
+    if(!is_address_valid(addr,capacity_id))
+	    return ESP_FAIL;
     esp_err_t ret;
     uint8_t tx_buffer[5];
     tx_buffer[0] = PSRAM_WRITE_CMD;
@@ -52,13 +58,39 @@ esp_err_t psram_write(uint32_t addr,uint8_t *data){
     return ret;
 }
 
+esp_err_t psram_read_bytes(uint32_t addr,uint8_t *data,size_t len){
+    esp_err_t ret;
+    for(size_t i=0;i<len;i++){
+	ret = psram_read(addr+i,data+i);
+	if(ret!=ESP_OK)
+		return ESP_FAIL;
+    }
+    return ESP_OK;
+}
+
+esp_err_t psram_write_bytes(uint32_t addr,uint8_t *data,size_t len){
+    esp_err_t ret;
+    for(size_t i=0;i<len;i++){
+	ret = psram_write(addr+i,data+i);
+	if(ret!=ESP_OK)
+		return ESP_FAIL;
+    }
+    return ESP_OK;
+}
 void psram_test() {
     read_device_id();
-    uint8_t a = (uint8_t)'x';
-    uint8_t x;
+    uint8_t a[5];
+    uint8_t b[5];
+    a[0] = (uint8_t)'p';
+    a[1] = (uint8_t)'s';
+    a[2] = (uint8_t)'r';
+    a[3] = (uint8_t)'a';
+    a[4] = (uint8_t)'m';
     uint32_t addr = 0x23;
-    psram_write(addr,&a);
-    psram_read(addr,&x);
-    printf("%c",x);
+    psram_write_bytes(addr,&a,sizeof(a));
+    psram_read_bytes(addr,&b,sizeof(b));
+    for(size_t i=0;i<sizeof(b);i++)
+        printf("%c",b[i]);
+    printf("\n");
 }
 

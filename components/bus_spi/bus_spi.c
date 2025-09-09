@@ -125,11 +125,13 @@ esp_err_t send_command_array_withreturn(int spidevice, const uint8_t *commands, 
     	t.rx_buffer = rx_buffer;
     t.length = sum_size * 8; // 计算总位数
 			     
+    /*
     printf("commands: ");
     for(int i=0;i<command_len;i++){
              printf("0x%02X ", tx_buffer[i]);
     }
     printf("\n");
+    */
 
     //ret = spi_device_polling_transmit(spi_handles[spidevice], &t);
     ret = spi_device_transmit(spi_handles[spidevice], &t);
@@ -139,12 +141,13 @@ esp_err_t send_command_array_withreturn(int spidevice, const uint8_t *commands, 
 
     if(rx_data != NULL){
     memcpy(rx_data,rx_buffer+command_len,rx_len);
-
+    /*
     printf("returned rx_data: ");
     for(int i=0;i<command_len+rx_len;i++){
         printf("0x%02X ", rx_buffer[i]);
     }
     printf("\n");
+    */
     }
 
     return ret;
@@ -163,15 +166,14 @@ bool is_address_valid(uint32_t address,uint8_t capacity_id) {
     // 根据容量ID计算最大寻址空间
     max_address = (uint32_t)1 << capacity_id;
 
-    ESP_LOGI("TAG", "Capacity ID: 0x%02X, Max address: 0x%06lX (%lu bytes)",
-             capacity_id, max_address, max_address);
+    //ESP_LOGI("TAG", "Capacity ID: 0x%02X, Max address: 0x%06lX (%lu bytes)",capacity_id, max_address, max_address);
 
     // 检查地址是否在有效范围内
     if (address < max_address) {
-        ESP_LOGD("TAG", "Address 0x%06lX is valid", address);
+        //ESP_LOGI("TAG", "Address 0x%06lX is valid", address);
         return true;
     } else {
-        ESP_LOGW("TAG", "Address 0x%06lX exceeds maximum 0x%06lX", address, max_address - 1);
+        ESP_LOGI("TAG", "Address 0x%06lX exceeds maximum 0x%06lX", address, max_address - 1);
         return false;
     }
 }
